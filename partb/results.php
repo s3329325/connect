@@ -1,10 +1,8 @@
 
 <html>
 <head>
-
 <title>Assignment1</title>
 </head>
-
 <body >
 <?php
 
@@ -33,7 +31,9 @@
           "\n\t<th>Wine Name</th>" .
           "\n\t<th>Year</th>" .
           "\n\t<th>Winery</th>" .
-          "\n\t<th>Description</th>\n</tr>";
+		   "\n\t<th>variety</th>" .
+		  
+          "\n\t<th>region_name</th>\n</tr>";
 
       // Fetch each of the query rows
       while ($row = @ mysql_fetch_array($result)) {
@@ -42,7 +42,8 @@
             "\n\t<td>{$row["wine_name"]}</td>" .
             "\n\t<td>{$row["year"]}</td>" .
             "\n\t<td>{$row["winery_name"]}</td>" .
-            "\n\t<td>{$row["description"]}</td>\n</tr>";
+			 "\n\t<td>{$row["variety"]}</td>" .
+            "\n\t<td>{$row["region_name"]}</td>\n</tr>";
       } 
       print "\n</table>";
     } 
@@ -60,10 +61,12 @@
   }
 
   // Start a query ...
-  $query = "SELECT wine_id, wine_name, description, year, winery_name
-FROM winery, region, wine
+  $query = "SELECT wine.wine_id, wine_name, region_name, year, winery_name, variety
+FROM winery, region, wine, wine_variety, grape_variety
 WHERE winery.region_id = region.region_id
 AND wine.winery_id = winery.winery_id
+AND wine_variety.variety_id = grape_variety.variety_id
+AND wine.wine_id = wine_variety.wine_id
 And wine_name='{$wineName}'";
 
  
