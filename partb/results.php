@@ -58,6 +58,7 @@
   }
   // get the user data
   $wineName = $_GET['wineName'];
+      $wineryName = $_GET['wineryName'];
 
   if (!mysql_select_db(DB_NAME, $connection)) {
     showerror();
@@ -70,9 +71,16 @@ WHERE winery.region_id = region.region_id
 AND wine.winery_id = winery.winery_id
 AND wine_variety.variety_id = grape_variety.variety_id
 AND wine.wine_id = wine_variety.wine_id
-AND wine.wine_id= inventory.wine_id
-And wine_name='{$wineName}'";
+AND wine.wine_id= inventory.wine_id";
 
+
+
+  if (isset($wineName) && $wineName != NULL ) {
+    $query .= " AND wine_name = '{$wineName}'";
+  }
+   if (isset($wineryName) ) {
+    $query .= " AND winery_name = '{$wineryName}'";
+  }
  
   // run the query and show the results
   displayWinesList($connection, $query, $wineName);
