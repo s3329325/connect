@@ -50,6 +50,7 @@
       } 
       print "\n</table>";
     } 
+	  print "{$rowsFound} records found matching your criteria<br>";
   } 
 
   // Connect to the MySQL server
@@ -57,8 +58,10 @@
     die("Could not connect");
   }
   // get the user data
-  $wineName = $_GET['wineName'];
+	  $wineName = $_GET['wineName'];
       $wineryName = $_GET['wineryName'];
+	  $minYear = $_GET['minYear'];
+	  $maxYear = $_GET['maxYear'];
 
   if (!mysql_select_db(DB_NAME, $connection)) {
     showerror();
@@ -78,9 +81,17 @@ AND wine.wine_id= inventory.wine_id";
   if (isset($wineName) && $wineName != NULL ) {
     $query .= " AND wine_name = '{$wineName}'";
   }
-   if (isset($wineryName) ) {
+   if (isset($wineryName)&& $wineryName != NULL ) {
     $query .= " AND winery_name = '{$wineryName}'";
   }
+   if (isset($minYear)&& $minYear != NULL ) {
+    $query .= " AND year > '{$minYear}'";
+  }
+  if (isset($maxYear)&& $maxYear != NULL ) {
+    $query .= " AND year <'{$maxYear}'";
+  }
+  
+  
  
   // run the query and show the results
   displayWinesList($connection, $query, $wineName);
