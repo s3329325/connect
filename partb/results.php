@@ -26,7 +26,7 @@
       print "Wines of $wineName<br>";
 
       // and start a <table>.
-      print "\n<table>\n<tr>" .
+      print "\n<table border=1>\n<tr>" .
           "\n\t<th>Wine ID</th>" .
           "\n\t<th>Wine Name</th>" .
           "\n\t<th>Year</th>" .
@@ -62,6 +62,8 @@
       $wineryName = $_GET['wineryName'];
 	  $minYear = $_GET['minYear'];
 	  $maxYear = $_GET['maxYear'];
+	  $minCost = $_GET['minCost'];
+	  $maxCost = $_GET['maxCost'];
 
   if (!mysql_select_db(DB_NAME, $connection)) {
     showerror();
@@ -90,6 +92,13 @@ AND wine.wine_id= inventory.wine_id";
   if (isset($maxYear)&& $maxYear != NULL ) {
     $query .= " AND year <'{$maxYear}'";
   }
+   if (isset($minCost)&& $minCost != NULL ) {
+    $query .= " AND cost > '{$minCost}'";
+  }
+  if (isset($maxCost)&& $maxCost != NULL ) {
+    $query .= " AND cost <'{$maxCost}'";
+  }
+  
   
   
  
