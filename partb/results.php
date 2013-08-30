@@ -33,7 +33,8 @@
           "\n\t<th>Winery</th>" .
 		   "\n\t<th>variety</th>" .
 		  "\n\t<th>region_name</th>" .
-          "\n\t<th>cost</th>\n</tr>";
+          "\n\t<th>cost</th>". 
+		  "\n\t<th>on_hand</th>\n</tr>";
 					
       // Fetch each of the query rows
       while ($row = @ mysql_fetch_array($result)) {
@@ -44,7 +45,8 @@
             "\n\t<td>{$row["winery_name"]}</td>" .
 			 "\n\t<td>{$row["variety"]}</td>" .
 			  "\n\t<td>{$row["region_name"]}</td>" .
-            "\n\t<td>{$row["cost"]}</td>\n</tr>";
+            "\n\t<td>{$row["cost"]}</td>" .
+			 "\n\t<td>{$row["on_hand"]}</td>\n</tr>";
       } 
       print "\n</table>";
     } 
@@ -62,7 +64,7 @@
   }
 
   // Start a query ...
-  $query = "SELECT wine.wine_id, wine_name, region_name, year, winery_name, variety,cost
+  $query = "SELECT wine.wine_id, wine_name, region_name, year, winery_name, variety,cost, on_hand
 FROM winery, region, wine, wine_variety, grape_variety , inventory
 WHERE winery.region_id = region.region_id
 AND wine.winery_id = winery.winery_id
