@@ -64,6 +64,10 @@
 	  $maxYear = $_GET['maxYear'];
 	  $minCost = $_GET['minCost'];
 	  $maxCost = $_GET['maxCost'];
+	  $region = $_GET['region'];
+	  $grape = $_GET['grape'];
+	  
+	
 
   if (!mysql_select_db(DB_NAME, $connection)) {
     showerror();
@@ -87,10 +91,10 @@ AND wine.wine_id= inventory.wine_id";
     $query .= " AND winery_name = '{$wineryName}'";
   }
    if (isset($minYear)&& $minYear != NULL ) {
-    $query .= " AND year > '{$minYear}'";
+    $query .= " AND year >= '{$minYear}'";
   }
   if (isset($maxYear)&& $maxYear != NULL ) {
-    $query .= " AND year <'{$maxYear}'";
+    $query .= " AND year <='{$maxYear}'";
   }
    if (isset($minCost)&& $minCost != NULL ) {
     $query .= " AND cost > '{$minCost}'";
@@ -98,7 +102,12 @@ AND wine.wine_id= inventory.wine_id";
   if (isset($maxCost)&& $maxCost != NULL ) {
     $query .= " AND cost <'{$maxCost}'";
   }
-  
+   if (isset($region) && $region != "All") {
+    $query .= " AND region_name = '{$region}'";
+  }
+    if (isset($grape) && $grape != "All") {
+     $query .= " AND variety = '{$grape}'";
+  }
   
   
  
