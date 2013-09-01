@@ -67,6 +67,31 @@
 	  $region = $_GET['region'];
 	  $grape = $_GET['grape'];
 	  
+	//validatio .............
+	if ($wineName==""&& $wineryName==""&& $minYear==""&&
+	$maxYear==""&& $minCost==""&& $maxCost==""&& 
+	$region=="All"&& $grape=="")
+	{
+	echo "please select an input Thanks.<br>";
+	die("Could not connect");
+	}
+	
+	// yearrr ............
+	
+	if($minYear > $maxYear){
+	echo "!! the minYear is grater than maxyear!!!";
+	echo "try again.Click on the Link below.
+	<br>: <a href='table.php'>to main page </a>";
+                   }
+				   
+	 // cost ............
+	if($minCost > $maxCost){
+	echo "!! the minYear is grater than maxcost please try again!!!";
+	echo "try again.Click on the Link below.
+	<br>: <a href='table.php'>to return to the main page </a>";
+                   }
+	
+	
 	
 
   if (!mysql_select_db(DB_NAME, $connection)) {
@@ -105,7 +130,7 @@ AND wine.wine_id= inventory.wine_id";
    if (isset($region) && $region != "All") {
     $query .= " AND region_name = '{$region}'";
   }
-    if (isset($grape) && $grape != "All") {
+    if (isset($grape) && $grape != NULL) {
      $query .= " AND variety = '{$grape}'";
   }
   

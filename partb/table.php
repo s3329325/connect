@@ -36,9 +36,10 @@
 	die('Could not connect: ' . mysql_error());
 	}
 		mysql_select_db("winestore", $con);
+		
 	$request1=mysql_query("select * from grape_variety");
 	while($row=mysql_fetch_row($request1)){
-
+	echo "<option value=''></option>";
 	echo "<option value=$row[1]> $row[1]</option>";
 	}
 	?>
