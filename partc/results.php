@@ -6,52 +6,18 @@
 <body >
 <?php
 
+  require 'db.php';
+	require_once ("MiniTemplator.class.php");
+
+	$t = new MiniTemplator;
+	$ok = $t->readTemplateFromFile("minitemplate.html");
+
   function showerror() {
      die("Error " . mysql_errno() . " : " . mysql_error());
   }
 
-  require 'db.php';
 
-  // Show all wines in a region in a <table>
-  function displayWinesList($connection, $query, $wineName) {
-    // Run the query on the server
-    if (!($result = @ mysql_query ($query, $connection))) {
-      showerror();
-    }
-    // Find out how many rows are available
-    $rowsFound = @ mysql_num_rows($result);
-	
-    if ($rowsFound > 0) {
-   
-      print "Wines of $wineName<br>";
-
-      // and start a <table>.
-      print "\n<table border=1>\n<tr>" .
-          "\n\t<th>Wine ID</th>" .
-          "\n\t<th>Wine Name</th>" .
-          "\n\t<th>Year</th>" .
-          "\n\t<th>Winery</th>" .
-		   "\n\t<th>variety</th>" .
-		  "\n\t<th>region_name</th>" .
-          "\n\t<th>cost</th>". 
-		  "\n\t<th>on_hand</th>\n</tr>";
-					
-      // Fetch each of the query rows
-      while ($row = @ mysql_fetch_array($result)) {
-        // Print one row of results
-        print "\n<tr>\n\t<td>{$row["wine_id"]}</td>" .
-            "\n\t<td>{$row["wine_name"]}</td>" .
-            "\n\t<td>{$row["year"]}</td>" .
-            "\n\t<td>{$row["winery_name"]}</td>" .
-			 "\n\t<td>{$row["variety"]}</td>" .
-			  "\n\t<td>{$row["region_name"]}</td>" .
-            "\n\t<td>{$row["cost"]}</td>" .
-			 "\n\t<td>{$row["on_hand"]}</td>\n</tr>";
-      } 
-      print "\n</table>";
-    } 
-	  print "{$rowsFound} records found matching your criteria<br>";
-  } 
+ 
 
   // Connect to the MySQL server
   if (!($connection = @ mysql_connect(DB_HOST, DB_USER, DB_PW))) {
@@ -64,6 +30,10 @@
 	  $maxYear = $_GET['maxYear'];
 	  $minCost = $_GET['minCost'];
 	  $maxCost = $_GET['maxCost'];
+	  $region = $_GET['region'];
+	  $grape = $_GET['grape'];
+	  
+	
 
   if (!mysql_select_db(DB_NAME, $connection)) {
     showerror();
@@ -87,10 +57,10 @@ AND wine.wine_id= inventory.wine_id";
     $query .= " AND winery_name = '{$wineryName}'";
   }
    if (isset($minYear)&& $minYear != NULL ) {
-    $query .= " AND year > '{$minYear}'";
+    $query .= " AND year >= '{$minYear}'";
   }
   if (isset($maxYear)&& $maxYear != NULL ) {
-    $query .= " AND year <'{$maxYear}'";
+    $query .= " AND year <='{$maxYear}'";
   }
    if (isset($minCost)&& $minCost != NULL ) {
     $query .= " AND cost > '{$minCost}'";
@@ -98,12 +68,36 @@ AND wine.wine_id= inventory.wine_id";
   if (isset($maxCost)&& $maxCost != NULL ) {
     $query .= " AND cost <'{$maxCost}'";
   }
+   if (isset($region) && $region != "All") {
+    $query .= " AND region_name = '{$region}'";
+  }
+    if (isset($grape) && $grape != "All") {
+     $query .= " AND variety = '{$grape}'";
+  }
   
   
-  
+$request1=mysql_query($query);
  
-  // run the query and show the results
-  displayWinesList($connection, $query, $wineName);
+ while($row=mysql_fetch_row($request1))
+  { 
+ 
+$t->setVariable("wineid",$row[0]);
+
+$t->setVariable("winename",$row[1]);
+$t->setVariable("year",$row[2]);
+$t->setVariable("wineryname",$row[3]);
+$t->setVariable("grape",$row[4]);
+$t->setVariable("region",$row[5]);
+$t->setVariable("cost",$row[6]);
+$t->setVariable("available",$row[7]);
+
+$t->addBlock("data");
+
+
+}
+$t->generateOutput();
+
+
 ?>
 </body>
 </html>
